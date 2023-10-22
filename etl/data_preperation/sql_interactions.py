@@ -23,7 +23,7 @@ class SqlHandler:
     def close_cnxn(self)->None:
 
         logger.info('commiting the changes')
-        self.c
+        self.cursor.close()
         self.cnxn.close()
         logger.info('the connection has been closed')
 
@@ -42,11 +42,10 @@ class SqlHandler:
     
     def truncate_table(self)->None:
         
-
         query=f"DROP TABLE IF EXISTS {self.table_name};"
         self.cursor.execute(query)
         logging.info(f'the {self.table_name} is truncated')
-        self.cursor.close()
+        # self.cursor.close()
 
     def drop_table(self):
         
@@ -60,7 +59,7 @@ class SqlHandler:
         logging.info(f"table '{self.table_name}' deleted.")
         logger.debug('using drop table function')
 
-    def insert_many(self, df: pd.DataFrame) -> str:
+    def insert_many(self, df:pd.DataFrame) -> str:
         
         df=df.replace(np.nan, None) # for handling NULLS
         df.rename(columns=lambda x: x.lower(), inplace=True)
@@ -82,7 +81,7 @@ class SqlHandler:
             cols,params =', '.join(columns), ', '.join(ncolumns)
         else:
             cols,params =columns[0],ncolumns[0]
-
+            
         logger.info(f'insert structure: colnames: {cols} params: {params}')
         logger.info(values[0])
         query=f"""INSERT INTO  {self.table_name} ({cols}) VALUES ({params});"""
@@ -108,22 +107,6 @@ class SqlHandler:
 
     def from_sql_to_pandas(self, chunksize:int, id_value:str) -> pd.DataFrame:
         """
-
-        Parameters
-        ----------
-        chunksize : int
-            the chunksize for the extract
-        id_value : char
-            the values by which it should be sorted, 'MSISDN, DATE_ID'
-        dbname : char
-            (Default value = 'CVM')
-        tablename : char
-            (Default value = 'DIM_ARMENIA_MSISDNS')
-        chunksize:int :
-            
-     
-        Returns
-        -------
 
         """
         
